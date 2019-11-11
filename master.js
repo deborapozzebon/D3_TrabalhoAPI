@@ -3,24 +3,35 @@ var ticker = 'ticker';
 
 fetchWithParameters(coin, ticker);
 
-function fetchWithParameters(coin, ticker){
-  fetch('https://www.mercadobitcoin.net/api/'+coin+'/'+ticker+'/', {
-  method: 'GET'
-})
-  .then(function (response) {
-    response.json().then(function (data) {
-      console.log(data);
-      getHighAndLowerValue(data);
-      calulateBitcoin(data);
+//#region http calls
+function fetchWithParameters(coin, ticker) {
+  fetch('https://www.mercadobitcoin.net/api/' + coin + '/' + ticker + '/', { method: 'GET' })
+    .then(function (response) {
+      response.json().then(function (data) {
+        getHighAndLowerValue(data);
+      });
+    })
+    .catch(function (err) {
+      console.error('Failed retrieving information', err);
     });
-  })
-  .catch(function (err) {
-    console.error('Failed retrieving information', err);
-  });
-
 }
 
-function getHighAndLowerValue(data){
+function calulateBitcoin() {
+  fetch('https://www.mercadobitcoin.net/api/' + coin + '/trades/', { method: 'GET' })
+    .then(function (response) {
+      response.json().then(function (data) {
+        returnValueCalulateBitcoin(data);
+      });
+    })
+    .catch(function (err) {
+      console.error('Failed retrieving information', err);
+    });
+}
+
+//#endregion
+
+//#region functions with data parameter
+function getHighAndLowerValue(data) {
   var $myDivHigh = $("#high");
   var $myDivLow = $("#low");
 
@@ -31,10 +42,12 @@ function getHighAndLowerValue(data){
   $myDivLow.html(h4_low);
 }
 
-function calulateBitcoin(data){
-  var text = document.getElementById('valueRS').value;
+function returnValueCalulateBitcoin(data) {
+  var $myDivValueInReal = $("#valueInReal");
+  console.log(data[0].price);
+  var h6_valueInReal = "<h6>Quatidade que pode ser comprada: " + document.getElementById('valueRS').value / data[0].price + "</h6>";
 
-
-
-  console.log(text);
+  $myDivValueInReal.html(h6_valueInReal);
 }
+
+//#endregion
