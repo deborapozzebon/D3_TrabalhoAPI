@@ -33,13 +33,13 @@
     <fieldset>
       <legend>Cotação por moeda</legend>
       <label for="estilo">Qual moeda quer cotar?</label>
-      <input type="text" name="example" list="exampleList">
-      <datalist id="exampleList" onchange="calulateNewValueFromCurrentCoin()">
-        <option value="BTC">Bitcoin</option>
-        <option value="LTC">Litecoin</option>
-        <option value="BCH">BCash</option>
-        <option value="XRP">XRP (Ripple)</option>
-        <option value="ETH">Ethereum</option>
+      <input id="input" type="text" name="example" list="exampleList" onchange="calulateNewValueFromCurrentCoin()">
+      <datalist id="exampleList">
+        <option data-id="BTC">Bitcoin</option>
+        <option data-id="LTC">Litecoin</option>
+        <option data-id="BCH">BCash</option>
+        <option data-id="XRP">XRP (Ripple)</option>
+        <option data-id="ETH">Ethereum</option>
       </datalist>
     </fieldset>
 
