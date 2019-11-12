@@ -15,20 +15,39 @@
 <body>
   <div class="container">
     <!-- <div class="row"> -->
-      <div class="col s12 center-align">
-        <h2>COTAÇÃO DE MOEDAS</h2>
-      </div>
-      <div id ="high" class="col s12 High center-align">
-      </div>
-      <div id="low" class="col s12 Low center-align">
-      </div>
-      Valor em reais: <input type="text" id="valueRS" name="FirstName" onchange="calulateBitcoin()"><br>
+    <div class="col s12 center-align">
+      <h2>COTAÇÃO DE MOEDAS</h2>
+    </div>
+    <div id="high" class="col s12 High center-align">
+    </div>
+    <div id="low" class="col s12 Low center-align">
+    </div>
+    <fieldset>
+      <legend>Cotação em reais</legend>
+      <label for="estilo">Valor em reais:</label>
+       <input type="text" id="valueRS" name="FirstName" onchange="calulateBitcoin()"><br>
       <div id="valueInReal" class="col s12 Low center-align">
       </div>
-    </div>
+    </fieldset>
+    <br />
+    <fieldset>
+      <legend>Cotação por moeda</legend>
+      <label for="estilo">Qual moeda quer cotar?</label>
+      <input type="text" name="example" list="exampleList">
+      <datalist id="exampleList" onchange="calulateNewValueFromCurrentCoin()">
+        <option value="BTC">Bitcoin</option>
+        <option value="LTC">Litecoin</option>
+        <option value="BCH">BCash</option>
+        <option value="XRP">XRP (Ripple)</option>
+        <option value="ETH">Ethereum</option>
+      </datalist>
+    </fieldset>
+
+
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="master.js" charset="utf-8"></script>

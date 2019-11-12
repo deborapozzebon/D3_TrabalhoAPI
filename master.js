@@ -50,4 +50,8 @@ function returnValueCalulateBitcoin(data) {
   $myDivValueInReal.html(h6_valueInReal);
 }
 
+function calulateNewValueFromCurrentCoin(data){
+  console.log($('#exampleList').val())
+}
+
 //#endregion
