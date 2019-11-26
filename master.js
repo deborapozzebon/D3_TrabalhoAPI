@@ -16,6 +16,20 @@ function fetchWithParameters(coin, ticker) {
     });
 }
 
+function getAverage(coin, year, day, month) {
+  console.log(coin);
+  fetch('https://www.mercadobitcoin.net/api/'+coin+'/day-summary/'+year+'/'+month+'/'+day+'/', { method: 'GET' })
+    .then(function (response) {
+      response.json().then(function (data) {
+        console.log(JSON.parse(data));
+        //drawChart(data);
+      });
+    })
+    .catch(function (err) {
+      console.error('Failed retrieving information', err);
+    });
+}
+
 function calulateBitcoin2() {
   fetch('https://www.mercadobitcoin.net/api/' + coin + '/trades/', { method: 'GET' })
     .then(function (response) {
@@ -32,9 +46,6 @@ function calulateBitcoin(coin) {
   if (isEmpty(coin)) {
     coin = 'BTC';
   }
-
-  console.log(coin);
-
   fetch('https://www.mercadobitcoin.net/api/' + coin + '/trades/', { method: 'GET' })
     .then(function (response) {
       response.json().then(function (data) {
@@ -79,4 +90,53 @@ function myFunction() {
 function calulateNewValueFromCurrentCoin(data) {
   console.log(data.value);
 }
+//#endregion
+
+//#region chart
+google.charts.load('current', { packages: ['corechart', 'line'] });
+google.charts.setOnLoadCallback(drawBackgroundColor);
+
+function drawChart(data){
+}
+
+
+
+function drawBackgroundColor() {
+  var data = new google.visualization.DataTable();
+  data.addColumn('date', 'X');
+  data.addColumn('number', 'Preço da moeda');
+
+  var date = new Date();
+  date.setDate(date.getDate() - 1);
+  console.log(date.getFullYear());
+  console.log(date.getMonth()+1);
+  console.log(date.getDate()-1);
+
+  var aaa = getAverage(coin, date.getFullYear(), date.getMonth()+1, date.getDate()-10)
+
+  data.addRows([
+    [new Date(date), 0],
+    [new Date(date.setDate(date.getDate() - 1)), 15],
+    [new Date(date.setDate(date.getDate() - 1)), 10],
+    [new Date(date.setDate(date.getDate() - 1)), 15],
+    [new Date(date.setDate(date.getDate() - 1)), 25],
+    [new Date(date.setDate(date.getDate() - 1)), 15],
+    [new Date(date.setDate(date.getDate() - 1)), 5],
+  ]);
+
+  var options = {
+    hAxis: {
+      title: 'Período',
+      format: 'MMM dd',
+    },
+    vAxis: {
+      title: 'Valor'
+    },
+    backgroundColor: '#f1f8e9'
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+  chart.draw(data, options);
+}
+
 //#endregion
