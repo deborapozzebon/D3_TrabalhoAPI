@@ -16,21 +16,57 @@ function fetchWithParameters(coin, ticker) {
     });
 }
 
-function getAverage(coin, year, day, month) {
-  console.log(coin);
-  fetch('https://www.mercadobitcoin.net/api/'+coin+'/day-summary/'+year+'/'+month+'/'+day+'/', { method: 'GET' })
-    .then(function (response) {
-      response.json().then(function (data) {
-        console.log(JSON.parse(data));
-        //drawChart(data);
-      });
+function getMediumAverage() {
+  var dataChart = new google.visualization.DataTable();
+  dataChart.addColumn('number', 'dias');
+  dataChart.addColumn('number', 'Preço da moeda');
+
+  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+  for (var day = 0; day <= 7; day++) {
+    var date = new Date();
+
+    date.setDate(date.getDate()- day);
+
+    var dayLocal = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+
+    fetch('https://www.mercadobitcoin.net/api/' + coin + '/day-summary/' + year + '/' + month + '/' + dayLocal + '/', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
     })
-    .catch(function (err) {
-      console.error('Failed retrieving information', err);
-    });
+      .then(function (response) {
+        response.json().then(function (data) {
+          var averagePrice = parseFloat(data.avg_price);
+
+          dataChart.addRows([
+            [dayLocal, averagePrice],
+          ]);
+        });
+
+        var options = {
+          hAxis: {
+            title: 'Dia',
+            //format: 'MMM dd',
+          },
+          vAxis: {
+            title: 'Valor'
+          },
+          backgroundColor: '#f1f8e9'
+        };
+             
+        chart.draw(dataChart, options);
+      })
+      .catch(function (err) {
+        console.error('Failed retrieving information', err);
+      });
+  }
 }
 
-function calulateBitcoin2() {
+function calulateBitcoinWithoutParamether() {
   fetch('https://www.mercadobitcoin.net/api/' + coin + '/trades/', { method: 'GET' })
     .then(function (response) {
       response.json().then(function (data) {
@@ -94,49 +130,8 @@ function calulateNewValueFromCurrentCoin(data) {
 
 //#region chart
 google.charts.load('current', { packages: ['corechart', 'line'] });
-google.charts.setOnLoadCallback(drawBackgroundColor);
+google.charts.setOnLoadCallback(getMediumAverage);
 
-function drawChart(data){
+function drawChart(data) {
 }
-
-
-
-function drawBackgroundColor() {
-  var data = new google.visualization.DataTable();
-  data.addColumn('date', 'X');
-  data.addColumn('number', 'Preço da moeda');
-
-  var date = new Date();
-  date.setDate(date.getDate() - 1);
-  console.log(date.getFullYear());
-  console.log(date.getMonth()+1);
-  console.log(date.getDate()-1);
-
-  var aaa = getAverage(coin, date.getFullYear(), date.getMonth()+1, date.getDate()-10)
-
-  data.addRows([
-    [new Date(date), 0],
-    [new Date(date.setDate(date.getDate() - 1)), 15],
-    [new Date(date.setDate(date.getDate() - 1)), 10],
-    [new Date(date.setDate(date.getDate() - 1)), 15],
-    [new Date(date.setDate(date.getDate() - 1)), 25],
-    [new Date(date.setDate(date.getDate() - 1)), 15],
-    [new Date(date.setDate(date.getDate() - 1)), 5],
-  ]);
-
-  var options = {
-    hAxis: {
-      title: 'Período',
-      format: 'MMM dd',
-    },
-    vAxis: {
-      title: 'Valor'
-    },
-    backgroundColor: '#f1f8e9'
-  };
-
-  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-  chart.draw(data, options);
-}
-
 //#endregion

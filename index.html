@@ -25,7 +25,7 @@
     <fieldset>
       <legend>Cotação em reais</legend>
       <label for="estilo">Valor em reais:</label>
-       <input type="text" id="valueRS" name="FirstName" onchange="calulateBitcoin2()"><br>
+       <input type="text" id="valueRS" name="FirstName" onchange="calulateBitcoinWithoutParamether()"><br>
       <div id="valueInReal" class="col s12 Low center-align">
       </div>
     </fieldset>
@@ -33,7 +33,7 @@
     <fieldset>
       <legend>Cotação por moeda</legend>
       <label for="estilo">Qual moeda quer cotar?</label>
-      <input id="l" list="bloodgroup" name="blood_group" onchange="myFunction()" placeholder="Moeda">
+      <input id="l" list="bloodgroup" name="blood_group" onchange="myFunction(); getMediumAverage()" placeholder="Moeda">
                     <datalist id="bloodgroup">
                         <option value="BTC"> 
                         <option value="LTC"> 
