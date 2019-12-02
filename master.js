@@ -1,7 +1,24 @@
 var coin = 'BTC';
 var ticker = 'ticker';
+var dataChart = null;
+var options = {
+  hAxis: {
+    title: 'Dia',
+    format: 'MMM dd',
+  },
+  vAxis: {
+    title: 'Valor'
+  },
+  backgroundColor: '#f1f8e9'
+};
 
 fetchWithParameters(coin, ticker);
+
+function LoadChart() {
+    dataChart = new google.visualization.DataTable();
+    dataChart.addColumn('date', 'dias');
+    dataChart.addColumn('number', 'Preço da moeda');
+}
 
 //#region http calls
 function fetchWithParameters(coin, ticker) {
@@ -16,53 +33,46 @@ function fetchWithParameters(coin, ticker) {
     });
 }
 
-function getMediumAverage() {
-  var dataChart = new google.visualization.DataTable();
-  dataChart.addColumn('number', 'dias');
-  dataChart.addColumn('number', 'Preço da moeda');
+async function getMediumAverage() {
+    LoadChart();
 
   var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
 
   for (var day = 0; day <= 7; day++) {
     var date = new Date();
 
-    date.setDate(date.getDate()- day);
+    date.setDate(date.getDate() - day);
 
     var dayLocal = date.getDate();
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
 
-    fetch('https://www.mercadobitcoin.net/api/' + coin + '/day-summary/' + year + '/' + month + '/' + dayLocal + '/', {
+    var url = 'https://www.mercadobitcoin.net/api/' + coin + '/day-summary/' + year + '/' + month + '/' + dayLocal + '/';
+    console.log(url.toString());
+    
+    var response = await fetch(url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json'
       }
-    })
-      .then(function (response) {
-        response.json().then(function (data) {
-          var averagePrice = parseFloat(data.avg_price);
+    });
+    
+    var data = await response.json();
+    
+    if (data.error){
+      console.log(data.error.toString());
+      continue;
+    }
 
-          dataChart.addRows([
-            [dayLocal, averagePrice],
-          ]);
-        });
+    var averagePrice = parseFloat(data.avg_price);
 
-        var options = {
-          hAxis: {
-            title: 'Dia',
-            //format: 'MMM dd',
-          },
-          vAxis: {
-            title: 'Valor'
-          },
-          backgroundColor: '#f1f8e9'
-        };
-             
-        chart.draw(dataChart, options);
-      })
-      .catch(function (err) {
-        console.error('Failed retrieving information', err);
-      });
+    console.log(dayLocal.toString() + " - " + averagePrice.toString());
+
+    dataChart.addRows([
+      [date, averagePrice],
+    ]);
+      
+    chart.draw(dataChart, options);
   }
 }
 
@@ -79,7 +89,7 @@ function calulateBitcoinWithoutParamether() {
 }
 
 function calulateBitcoin(coin) {
-  if (isEmpty(coin)) {
+  if (isEmpty(coin)) {1
     coin = 'BTC';
   }
   fetch('https://www.mercadobitcoin.net/api/' + coin + '/trades/', { method: 'GET' })
